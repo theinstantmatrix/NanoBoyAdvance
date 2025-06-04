@@ -1,0 +1,46 @@
+name: Build NanoBoyAdvance (Windows ARM64/AArch64)
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build-winarm64:
+    runs-on: windows-11-arm
+    steps:
+      - name: Set git to use LF
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+      - uses: actions/checkout@v4
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: CLANGARM64
+          update: true
+          install: >-
+            mingw-w64-clang-aarch64-clang
+            mingw-w64-clang-aarch64-cmake
+            mingw-w64-clang-aarch64-ninja
+            mingw-w64-clang-aarch64-python-jinja
+            mingw-w64-clang-aarch64-python-lxml
+            mingw-w64-clang-aarch64-qt5-static
+            mingw-w64-clang-aarch64-SDL2
+      - name: Build
+        shell: msys2 {0}
+        run: |
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_POLICY_VERSION_MINIMUM=3.5 -DPLATFORM_QT_STATIC=ON -DPython_EXECUTABLE="/clangarm64/bin/python3" -DUSE_STATIC_SDL=ON
+          cmake --build build
+      - name: Copy files
+        shell: msys2 {0}
+        run: |
+          cd build
+          mkdir upload
+          cp bin/qt/{config.toml,NanoBoyAdvance.exe} upload
+          strip upload/NanoBoyAdvance.exe
+      - name: Upload as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: NanoBoyAdvance-git-winarm64-${{github.sha}}
+          path: build/upload
+          if-no-files-found: error
