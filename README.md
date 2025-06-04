@@ -1,3 +1,8 @@
+NanoBoyAdvance (with unofficial binaries for Windows ARM64/AArch64, fork of [nba-emu/NanoBoyAdvance](https://github.com/nba-emu/NanoBoyAdvance)).  
+Downloads are hosted at the [releases](https://github.com/theinstantmatrix/NanoBoyAdvance/releases) section.
+
+---
+
 <h2>NanoBoyAdvance</h2>
 
 [![license](https://img.shields.io/github/license/nba-emu/NanoBoyAdvance)](https://github.com/nba-emu/NanoBoyAdvance/blob/master/LICENSE)
